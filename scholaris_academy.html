@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scholaris Academy — AI-Powered Academic Excellence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #faf8f5;
+  --white: #ffffff;
+  --ink: #1a1a1a;
+  --ink2: #2d2d2d;
+  --muted: #6b6b6b;
+  --light: #e8e3db;
+  --gold: #b8922a;
+  --gold-light: #d4aa50;
+  --gold-pale: #f5edd8;
+  --navy: #1b2a4a;
+  --navy-mid: #243559;
+  --border: #ddd8cf;
+  --shadow: rgba(26,26,26,0.08);
+  --shadow-deep: rgba(26,26,26,0.16);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+.topbar {
+  background: var(--navy);
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+.topbar strong { color: var(--gold-light); }
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 12px var(--shadow);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2rem;
+}
+.logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+.logo-mark {
+  width: 40px; height: 40px; background: var(--navy); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-light); font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; font-weight: 900;
+}
+.logo-text { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--navy); }
+.logo-text span { color: var(--gold); }
+.nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: var(--muted); text-decoration: none; font-size: 0.9rem;
+  font-weight: 500; transition: color 0.2s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 0; height: 2px;
+  background: var(--gold); transform: scaleX(0); transition: transform 0.2s;
+}
+.nav-links a:hover { color: var(--navy); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.btn-nav {
+  background: var(--navy); color: var(--white) !important;
+  padding: 0.6rem 1.4rem; border-radius: 6px;
+  font-size: 0.85rem !important; font-weight: 700 !important;
+  letter-spacing: 0.5px; transition: background 0.2s !important;
+}
+.btn-nav:hover { background: var(--navy-mid) !important; }
+.btn-nav::after { display: none !important; }
+
+/* HERO */
+.hero {
+  background: var(--navy); position: relative; overflow: hidden;
+  padding: 7rem 2rem 5rem;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 50%, rgba(184,146,42,0.12) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+  position: relative; z-index: 1;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: rgba(184,146,42,0.15); border: 1px solid rgba(184,146,42,0.3);
+  border-radius: 4px; padding: 0.35rem 0.9rem;
+  color: var(--gold-light); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem;
+  animation: fadeIn 0.6s ease both;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 900; line-height: 1.1; color: var(--white);
+  letter-spacing: -1px; margin-bottom: 1.25rem;
+  animation: fadeIn 0.6s 0.1s ease both;
+}
+.hero h1 em { font-style: italic; color: var(--gold-light); }
+.hero-desc {
+  color: rgba(255,255,255,0.65); font-size: 1rem; font-weight: 300;
+  max-width: 460px; margin-bottom: 2.5rem; line-height: 1.8;
+  animation: fadeIn 0.6s 0.2s ease both;
+}
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeIn 0.6s 0.3s ease both; }
+.btn-gold {
+  background: var(--gold); color: var(--white);
+  padding: 0.85rem 2rem; border-radius: 6px; border: none;
+  font-family: 'Lato', sans-serif; font-weight: 700; font-size: 0.9rem;
+  letter-spacing: 0.5px; cursor: pointer; text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 20px rgba(184,146,42,0.35);
+}
+.btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+.btn-outline-white {
+  background: transparent; color: rgba(255,255,255,0.8);
+  padding: 0.85rem 2rem; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.25);
+  font-family: 'Lato', sans-serif; font-weight: 500; font-size: 0.9rem;
+  cursor: pointer; text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-outline-white:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+.hero-stats {
+  display: flex; gap: 2.5rem; margin-top: 3rem;
+  padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+  animation: fadeIn 0.6s 0.4s ease both;
+}
+.hero-stat-num {
+  font-family: 'Playfair Display', serif; font-size: 2rem;
+  font-weight: 700; color: var(--gold-light); line-height: 1;
+}
+.hero-stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
+.hero-visual { animation: fadeIn 0.8s 0.3s ease both; }
+.hero-card {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px; padding: 2rem; backdrop-filter: blur(8px);
+}
+.hc-label {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--gold-light); font-weight: 700; margin-bottom: 0.75rem;
+}
+.hc-question {
+  background: rgba(255,255,255,0.06); border-radius: 10px; padding: 1rem 1.2rem;
+  color: rgba(255,255,255,0.9); font-size: 0.9rem; margin-bottom: 1rem;
+  border-left: 3px solid var(--gold);
+}
+.hc-answer { display: flex; flex-direction: column; gap: 0.6rem; }
+.hc-step { display: flex; align-items: flex-start; gap: 0.75rem; }
+.hc-step-badge {
+  background: var(--gold); color: var(--white);
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+}
+.hc-step-text { color: rgba(255,255,255,0.75); font-size: 0.85rem; line-height: 1.5; }
+.hc-step-text strong { color: rgba(255,255,255,0.95); }
+
+/* TRUST */
+.trust-bar {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 1.25rem 2rem;
+}
+.trust-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  gap: 3rem; flex-wrap: wrap;
+}
+.trust-item { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); font-size: 0.82rem; font-weight: 500; }
+.trust-icon { color: var(--gold); font-size: 1rem; }
+
+/* SECTIONS */
+.section-wrap { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
+.section-header { margin-bottom: 3.5rem; }
+.section-kicker {
+  display: inline-block; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.75rem;
+}
+.section-kicker::before { content: '— '; }
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700; line-height: 1.15; letter-spacing: -0.5px;
+  color: var(--navy); margin-bottom: 0.75rem;
+}
+.section-sub { color: var(--muted); max-width: 540px; font-weight: 300; font-size: 0.95rem; }
+
+/* HOW */
+.how-section { background: var(--cream); }
+.steps-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  margin-top: 3rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.step-cell {
+  padding: 2.5rem 2rem; border-right: 1px solid var(--border);
+  background: var(--white); transition: background 0.2s;
+}
+.step-cell:last-child { border-right: none; }
+.step-cell:hover { background: var(--cream); }
+.step-num {
+  font-family: 'Playfair Display', serif; font-size: 3rem;
+  font-weight: 900; color: var(--border); line-height: 1; margin-bottom: 0.5rem;
+}
+.step-icon-wrap {
+  width: 44px; height: 44px; background: var(--navy); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; margin-bottom: 1.25rem;
+}
+.step-cell h3 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+.step-cell p { font-size: 0.85rem; color: var(--muted); }
+
+/* SOLVER */
+.solver-section { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.solver-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 4rem; align-items: start; }
+.solver-info { padding-top: 1rem; }
+.solver-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+.sf-item {
+  display: flex; align-items: flex-start; gap: 0.9rem; padding: 1rem 1.2rem;
+  background: var(--cream); border-radius: 8px; border: 1px solid var(--border);
+}
+.sf-icon { width: 36px; height: 36px; background: var(--gold-pale); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.sf-item h4 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.15rem; }
+.sf-item p { font-size: 0.82rem; color: var(--muted); }
+.solver-box {
+  background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+  box-shadow: 0 8px 40px var(--shadow), 0 2px 8px var(--shadow);
+}
+.sb-header {
+  background: var(--navy); padding: 1rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sb-title { color: rgba(255,255,255,0.9); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.3px; }
+.sb-badge {
+  background: rgba(184,146,42,0.25); border: 1px solid rgba(184,146,42,0.4);
+  color: var(--gold-light); font-size: 0.7rem; font-weight: 700;
+  padding: 0.2rem 0.6rem; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase;
+}
+.sb-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.sb-tab {
+  flex: 1; padding: 0.85rem; border: none; background: var(--cream);
+  color: var(--muted); font-family: 'Lato', sans-serif; font-size: 0.82rem;
+  font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+  transition: all 0.2s; border-bottom: 3px solid transparent;
+}
+.sb-tab.active { background: var(--white); color: var(--navy); border-bottom-color: var(--gold); }
+.sb-tab:hover:not(.active) { color: var(--navy); background: var(--white); }
+.chat-panel, .upload-panel { padding: 1.25rem; }
+.upload-panel { display: none; }
+.chat-messages {
+  background: var(--cream); border: 1px solid var(--border); border-radius: 10px;
+  min-height: 260px; max-height: 340px; overflow-y: auto;
+  padding: 1.25rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 1rem;
+}
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.msg { display: flex; gap: 0.75rem; align-items: flex-start; }
+.msg.user { flex-direction: row-reverse; }
+.msg-av {
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700;
+}
+.msg.ai .msg-av { background: var(--navy); color: var(--gold-light); font-family: 'Playfair Display', serif; }
+.msg.user .msg-av { background: var(--gold); color: var(--white); }
+.msg-bub {
+  max-width: 82%; padding: 0.75rem 1rem; border-radius: 10px;
+  font-size: 0.875rem; line-height: 1.65;
+}
+.msg.ai .msg-bub { background: var(--white); border: 1px solid var(--border); border-top-left-radius: 3px; color: var(--ink2); }
+.msg.user .msg-bub { background: var(--navy); color: rgba(255,255,255,0.9); border-top-right-radius: 3px; }
+.typing-dots { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+.typing-dots span {
+  width: 6px; height: 6px; background: var(--gold); border-radius: 50%;
+  animation: tdot 1.2s ease infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes tdot { 0%,80%,100%{transform:translateY(0);opacity:.4} 40%{transform:translateY(-5px);opacity:1} }
+.subject-select {
+  width: 100%; padding: 0.6rem 0.9rem; border: 1px solid var(--border); border-radius: 7px;
+  background: var(--white); color: var(--ink); font-family: 'Lato', sans-serif;
+  font-size: 0.85rem; margin-bottom: 0.75rem; outline: none; transition: border-color 0.2s;
+}
+.subject-select:focus { border-color: var(--gold); }
+.chat-input-row { display: flex; gap: 0.6rem; align-items: flex-end; }
+.chat-textarea {
+  flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--white); color: var(--ink); font-family: 'Lato', sans-serif;
+  font-size: 0.875rem; resize: none; outline: none; min-height: 46px; max-height: 130px;
+  transition: border-color 0.2s;
+}
+.chat-textarea:focus { border-color: var(--gold); }
+.chat-textarea::placeholder { color: #aaa; }
+.send-btn {
+  background: var(--navy); color: var(--white); border: none; border-radius: 8px;
+  width: 46px; height: 46px; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; transition: background 0.2s; flex-shrink: 0;
+}
+.send-btn:hover { background: var(--navy-mid); }
+.quick-q { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
+.qq-btn {
+  background: var(--gold-pale); border: 1px solid rgba(184,146,42,0.25);
+  color: var(--gold); border-radius: 5px; padding: 0.3rem 0.7rem;
+  font-size: 0.75rem; font-weight: 600; cursor: pointer;
+  font-family: 'Lato', sans-serif; transition: background 0.2s;
+}
+.qq-btn:hover { background: #eeddc0; }
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: 12px;
+  padding: 2.5rem 1.5rem; text-align: center; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 1rem; position: relative;
+}
+.upload-zone:hover, .upload-zone.drag-over { border-color: var(--gold); background: var(--gold-pale); }
+.upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.uz-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.uz-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; }
+.uz-sub { font-size: 0.82rem; color: var(--muted); }
+.uz-formats { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; margin-top: 0.75rem; }
+.uz-tag { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.5rem; font-size: 0.7rem; color: var(--muted); font-weight: 700; }
+#previewImg { display: none; width: 100%; max-height: 220px; object-fit: contain; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 1rem; }
+.analyze-btn {
+  width: 100%; background: var(--navy); color: var(--white); border: none;
+  border-radius: 8px; padding: 0.85rem; font-family: 'Lato', sans-serif;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+  transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.analyze-btn:hover { background: var(--navy-mid); }
+.analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.upload-result {
+  background: var(--cream); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.25rem; margin-top: 1rem; font-size: 0.875rem; line-height: 1.7;
+  color: var(--ink2); display: none;
+}
+.upload-result .result-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  color: var(--navy); margin-bottom: 0.75rem; font-size: 0.95rem;
+}
+
+/* SUBJECTS */
+.subjects-section { background: var(--white); }
+.subjects-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1px; border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; margin-top: 3rem;
+}
+.subj-card {
+  background: var(--white); padding: 1.75rem 1.5rem;
+  border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.2s;
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+.subj-card:hover { background: var(--gold-pale); }
+.subj-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; background: var(--cream); border: 1px solid var(--border); }
+.subj-name { font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-bottom: 0.2rem; }
+.subj-topics { font-size: 0.75rem; color: var(--muted); }
+
+/* FEATURES */
+.features-section { background: var(--navy); }
+.features-section .section-title { color: var(--white); }
+.features-section .section-kicker { color: var(--gold-light); }
+.features-section .section-sub { color: rgba(255,255,255,0.5); }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.feat-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 2rem; transition: border-color 0.2s, background 0.2s;
+}
+.feat-card:hover { border-color: rgba(184,146,42,0.3); background: rgba(184,146,42,0.04); }
+.feat-icon { width: 44px; height: 44px; background: rgba(184,146,42,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1.25rem; border: 1px solid rgba(184,146,42,0.2); }
+.feat-card h3 { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.feat-card p { color: rgba(255,255,255,0.5); font-size: 0.875rem; }
+
+/* TESTIMONIALS */
+.testi-section { background: var(--cream); }
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.testi-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 2rem; transition: box-shadow 0.2s;
+}
+.testi-card:hover { box-shadow: 0 8px 30px var(--shadow-deep); }
+.testi-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 1rem; }
+.testi-quote { font-size: 0.9rem; color: var(--ink2); line-height: 1.7; font-style: italic; margin-bottom: 1.5rem; padding-left: 1rem; border-left: 3px solid var(--gold-pale); }
+.testi-author { display: flex; align-items: center; gap: 0.75rem; }
+.testi-av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; }
+.testi-name { font-weight: 700; font-size: 0.875rem; color: var(--navy); }
+.testi-role { font-size: 0.75rem; color: var(--muted); }
+
+/* CTA */
+.cta-section { background: var(--gold); padding: 5rem 2rem; text-align: center; }
+.cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; color: var(--white); margin-bottom: 0.75rem; }
+.cta-section p { color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-size: 1rem; }
+.btn-white {
+  background: var(--white); color: var(--gold); padding: 0.9rem 2.5rem; border-radius: 6px; border: none;
+  font-family: 'Lato', sans-serif; font-weight: 700; font-size: 0.9rem;
+  letter-spacing: 0.5px; cursor: pointer; text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+
+/* FOOTER */
+footer { background: var(--ink); color: rgba(255,255,255,0.5); padding: 3rem 2rem 2rem; }
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+  padding-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 1.5rem;
+}
+.footer-brand .logo-text { color: var(--white); font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+.footer-desc { font-size: 0.82rem; margin-top: 0.75rem; line-height: 1.7; }
+.footer-col h4 { color: rgba(255,255,255,0.9); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1rem; }
+.footer-col a { display: block; color: rgba(255,255,255,0.45); text-decoration: none; font-size: 0.85rem; margin-bottom: 0.5rem; transition: color 0.2s; }
+.footer-col a:hover { color: var(--gold-light); }
+.footer-bottom { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; flex-wrap: wrap; gap: 1rem; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+@media (max-width: 960px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .hero-visual { display: none; }
+  .solver-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .steps-row { grid-template-columns: 1fr 1fr; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+}
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .steps-row { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+  .subjects-grid { grid-template-columns: 1fr 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <strong>New:</strong> Photo upload now supported — snap your assignment question and get an instant solution
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">S</div>
+      <div class="logo-text">Scholaris<span> Academy</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#solver">AI Solver</a></li>
+      <li><a href="#subjects">Subjects</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#solver" class="btn-nav">Start Free →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Academic AI Platform</div>
+      <h1>Assignment Help,<br><em>Done Right.</em><br>Every Time.</h1>
+      <p class="hero-desc">Scholaris Academy gives every student access to expert-level, step-by-step guidance on any assignment question — across all subjects, at any academic level.</p>
+      <div class="hero-actions">
+        <a href="#solver" class="btn-gold">Use AI Solver Free →</a>
+        <a href="#how" class="btn-outline-white">Learn How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-num">60K+</div><div class="hero-stat-label">Students Enrolled</div></div>
+        <div><div class="hero-stat-num">200+</div><div class="hero-stat-label">Subjects Covered</div></div>
+        <div><div class="hero-stat-num">98.4%</div><div class="hero-stat-label">Accuracy Rate</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="hc-label">Live AI Solution</div>
+        <div class="hc-question">📐 Solve for x: &nbsp;<strong>3x² − 7x + 2 = 0</strong></div>
+        <div class="hc-answer">
+          <div class="hc-step"><div class="hc-step-badge">1</div><div class="hc-step-text">Identify: <strong>a=3, b=−7, c=2</strong>. Apply the quadratic formula.</div></div>
+          <div class="hc-step"><div class="hc-step-badge">2</div><div class="hc-step-text">Discriminant: <strong>b²−4ac = 49−24 = 25</strong></div></div>
+          <div class="hc-step"><div class="hc-step-badge">3</div><div class="hc-step-text">Apply formula: <strong>x = (7 ± 5) / 6</strong></div></div>
+          <div class="hc-step"><div class="hc-step-badge">4</div><div class="hc-step-text">Solutions: <strong>x = 2</strong> &nbsp;or&nbsp; <strong>x = 1/3</strong> ✓</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="trust-icon">✓</span> Available 24/7</div>
+    <div class="trust-item"><span class="trust-icon">✓</span> All Academic Levels</div>
+    <div class="trust-item"><span class="trust-icon">✓</span> Step-by-Step Solutions</div>
+    <div class="trust-item"><span class="trust-icon">✓</span> Text &amp; Photo Upload</div>
+    <div class="trust-item"><span class="trust-icon">✓</span> Trusted by 60,000+ Students</div>
+  </div>
+</div>
+
+<section class="how-section" id="how">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-kicker">Process</div>
+      <h2 class="section-title">How Scholaris Works</h2>
+      <p class="section-sub">From question to full understanding in under 30 seconds.</p>
+    </div>
+    <div class="steps-row reveal">
+      <div class="step-cell"><div class="step-num">01</div><div class="step-icon-wrap">📋</div><h3>Submit Your Question</h3><p>Type it in or photograph your assignment sheet — both methods are fully supported.</p></div>
+      <div class="step-cell"><div class="step-num">02</div><div class="step-icon-wrap">🧠</div><h3>AI Reads &amp; Analyses</h3><p>Our AI identifies the subject, topic and difficulty level to tailor the explanation perfectly.</p></div>
+      <div class="step-cell"><div class="step-num">03</div><div class="step-icon-wrap">📖</div><h3>Receive Guided Solution</h3><p>A clear, numbered step-by-step explanation — so you understand, not just copy.</p></div>
+      <div class="step-cell"><div class="step-num">04</div><div class="step-icon-wrap">💬</div><h3>Ask Follow-Up Questions</h3><p>Still unsure? Continue the conversation until you are fully confident.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="solver-section" id="solver">
+  <div class="section-wrap">
+    <div class="solver-layout">
+      <div class="solver-info reveal">
+        <div class="section-kicker">AI Solver</div>
+        <h2 class="section-title">Solve Any Assignment Instantly</h2>
+        <p class="section-sub">Type your question or upload a photo of your assignment — our AI handles both with equal precision.</p>
+        <div class="solver-features">
+          <div class="sf-item"><div class="sf-icon">✍️</div><div><h4>Text Input</h4><p>Type or paste any question and get a detailed step-by-step solution.</p></div></div>
+          <div class="sf-item"><div class="sf-icon">📷</div><div><h4>Photo Upload</h4><p>Snap a picture of your worksheet, textbook, or handwritten notes — AI reads it perfectly.</p></div></div>
+          <div class="sf-item"><div class="sf-icon">🔄</div><div><h4>Multi-Turn Tutoring</h4><p>Ask follow-up questions in a natural conversation until you fully understand.</p></div></div>
+        </div>
+      </div>
+      <div class="solver-box reveal">
+        <div class="sb-header">
+          <div class="sb-title">Scholaris AI Tutor</div>
+          <div class="sb-badge">LIVE</div>
+        </div>
+        <div class="sb-tabs">
+          <button class="sb-tab active" onclick="switchTab('chat',this)">✍️ &nbsp;Type Question</button>
+          <button class="sb-tab" onclick="switchTab('upload',this)">📷 &nbsp;Upload Photo</button>
+        </div>
+        <div class="chat-panel" id="chatPanel">
+          <select class="subject-select" id="subjectSelect">
+            <option value="General">📚 General — Let AI detect the subject</option>
+            <option value="Mathematics">📐 Mathematics</option>
+            <option value="Physics">🔬 Physics</option>
+            <option value="Chemistry">⚗️ Chemistry</option>
+            <option value="Biology">🧬 Biology</option>
+            <option value="English Language">📝 English Language</option>
+            <option value="Literature">📖 Literature</option>
+            <option value="Geography">🌍 Geography</option>
+            <option value="History">🏛️ History</option>
+            <option value="Economics">💰 Economics</option>
+            <option value="Computer Science">💻 Computer Science</option>
+            <option value="Government">🏛️ Government &amp; Civic Education</option>
+            <option value="French">🇫🇷 French</option>
+            <option value="Arabic">🕌 Arabic &amp; Islamic Studies</option>
+            <option value="Accounting">📊 Accounting</option>
+            <option value="Agricultural Science">🌱 Agricultural Science</option>
+          </select>
+          <div class="chat-messages" id="chatMessages">
+            <div class="msg ai">
+              <div class="msg-av">S</div>
+              <div class="msg-bub">Welcome to Scholaris Academy. I am your AI tutor, available around the clock.<br><br>Please select your subject above, then type your assignment question below. I will provide a detailed, step-by-step solution tailored to your academic level.</div>
+            </div>
+          </div>
+          <div class="chat-input-row">
+            <textarea class="chat-textarea" id="chatInput" placeholder="Type your assignment question here…" rows="1"
+              onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+            <button class="send-btn" onclick="sendChat()" title="Send">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
+          <div class="quick-q">
+            <button class="qq-btn" onclick="fillChat('Solve: 2x\u00B2 + 5x \u2212 3 = 0, showing all working')">Quadratic</button>
+            <button class="qq-btn" onclick="fillChat('Explain photosynthesis and its stages')">Photosynthesis</button>
+            <button class="qq-btn" onclick="fillChat('How do I write a strong thesis statement?')">Thesis Writing</button>
+            <button class="qq-btn" onclick="fillChat('What were the main causes of World War I?')">WWI Causes</button>
+          </div>
+        </div>
+        <div class="upload-panel" id="uploadPanel">
+          <div class="upload-zone" id="dropZone"
+            ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+            <input type="file" id="fileInput" accept="image/*" onchange="handleFile(event)">
+            <div class="uz-icon">📷</div>
+            <div class="uz-title">Drop your photo here or click to browse</div>
+            <div class="uz-sub">Photograph your assignment sheet, textbook page, or handwritten notes</div>
+            <div class="uz-formats">
+              <span class="uz-tag">JPG</span><span class="uz-tag">PNG</span>
+              <span class="uz-tag">WEBP</span><span class="uz-tag">HEIC</span>
+            </div>
+          </div>
+          <img id="previewImg" alt="Uploaded assignment">
+          <button class="analyze-btn" id="analyzeBtn" onclick="analyzeImage()" disabled>
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            Analyse Assignment Photo
+          </button>
+          <div class="upload-result" id="uploadResult">
+            <div class="result-header"><span>🎓</span> Scholaris AI — Assignment Analysis</div>
+            <div id="uploadResultText"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="subjects-section" id="subjects">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-kicker">Curriculum</div>
+      <h2 class="section-title">Every Subject. Every Level.</h2>
+      <p class="section-sub">From primary school fundamentals to advanced university coursework — fully covered.</p>
+    </div>
+    <div class="subjects-grid reveal">
+      <div class="subj-card"><div class="subj-icon">📐</div><div><div class="subj-name">Mathematics</div><div class="subj-topics">Algebra · Calculus · Statistics · Geometry</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🔬</div><div><div class="subj-name">Physics</div><div class="subj-topics">Mechanics · Waves · Electricity · Optics</div></div></div>
+      <div class="subj-card"><div class="subj-icon">⚗️</div><div><div class="subj-name">Chemistry</div><div class="subj-topics">Organic · Inorganic · Analytical · Physical</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🧬</div><div><div class="subj-name">Biology</div><div class="subj-topics">Genetics · Ecology · Cell Biology · Anatomy</div></div></div>
+      <div class="subj-card"><div class="subj-icon">📝</div><div><div class="subj-name">English Language</div><div class="subj-topics">Essays · Grammar · Comprehension · Writing</div></div></div>
+      <div class="subj-card"><div class="subj-icon">📖</div><div><div class="subj-name">Literature</div><div class="subj-topics">Prose · Poetry · Drama · Critical Analysis</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🌍</div><div><div class="subj-name">Geography</div><div class="subj-topics">Physical · Human · Cartography · Climate</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🏛️</div><div><div class="subj-name">History</div><div class="subj-topics">World History · African History · Colonial Era</div></div></div>
+      <div class="subj-card"><div class="subj-icon">💰</div><div><div class="subj-name">Economics</div><div class="subj-topics">Micro · Macro · International · Development</div></div></div>
+      <div class="subj-card"><div class="subj-icon">💻</div><div><div class="subj-name">Computer Science</div><div class="subj-topics">Programming · Algorithms · Databases</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🏛️</div><div><div class="subj-name">Government &amp; Civics</div><div class="subj-topics">Political Science · Constitution · Democracy</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🧮</div><div><div class="subj-name">Further Mathematics</div><div class="subj-topics">Complex Numbers · Matrices · Diff. Equations</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🇫🇷</div><div><div class="subj-name">French</div><div class="subj-topics">Grammar · Translation · Comprehension</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🕌</div><div><div class="subj-name">Arabic &amp; Islamic Studies</div><div class="subj-topics">Language · Quran · Hadith · Fiqh</div></div></div>
+      <div class="subj-card"><div class="subj-icon">📊</div><div><div class="subj-name">Accounting</div><div class="subj-topics">Financial Accounts · Bookkeeping · Auditing</div></div></div>
+      <div class="subj-card"><div class="subj-icon">🌱</div><div><div class="subj-name">Agricultural Science</div><div class="subj-topics">Soil Science · Crop Production · Livestock</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="features-section" id="features">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <div class="section-kicker">Why Scholaris</div>
+      <h2 class="section-title">Built for Academic Excellence</h2>
+      <p class="section-sub">Every feature purpose-built to help students learn deeply, not just copy answers.</p>
+    </div>
+    <div class="features-grid reveal">
+      <div class="feat-card"><div class="feat-icon">🧠</div><h3>Step-by-Step Reasoning</h3><p>Every solution is broken down methodically so you build real understanding, not surface-level answers.</p></div>
+      <div class="feat-card"><div class="feat-icon">📷</div><h3>Photo Recognition</h3><p>Upload any assignment image — printed or handwritten — and our AI reads and solves it accurately.</p></div>
+      <div class="feat-card"><div class="feat-icon">⚡</div><h3>Instant 24/7 Access</h3><p>No appointment needed. Get expert-level help at midnight before an exam, or any time you need it.</p></div>
+      <div class="feat-card"><div class="feat-icon">🎓</div><h3>Level-Appropriate</h3><p>Responses automatically adapt to your academic level — primary, secondary, or university standard.</p></div>
+      <div class="feat-card"><div class="feat-icon">💬</div><h3>Conversational Tutoring</h3><p>Continue asking until you truly understand. Our AI never rushes you or runs out of patience.</p></div>
+      <div class="feat-card"><div class="feat-icon">🔒</div><h3>Private &amp; Secure</h3><p>Your questions and sessions are completely private. Study freely without concern.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="testi-section">
+  <div class="section-wrap">
+    <div class="section-header reveal" style="text-align:center;">
+      <div class="section-kicker">Student Testimonials</div>
+      <h2 class="section-title">What Our Students Say</h2>
+    </div>
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"I failed Mathematics twice. After using Scholaris for six weeks, I scored 87% in my mock exams. The step-by-step explanations finally made everything click."</p>
+        <div class="testi-author"><div class="testi-av" style="background:#dbeafe;color:#1b2a4a;">A</div><div><div class="testi-name">Amina Suleiman</div><div class="testi-role">SS3 Student, Kano State</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"The photo upload feature is remarkable. I snap my textbook page and within seconds I have a full, clear solution. It has completely changed how I study."</p>
+        <div class="testi-author"><div class="testi-av" style="background:#dcfce7;color:#166534;">C</div><div><div class="testi-name">Chukwuemeka Obi</div><div class="testi-role">200 Level, University of Lagos</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"As a parent helping my children with homework, Scholaris has been invaluable. It explains things at their level — patient, clear, and always correct."</p>
+        <div class="testi-author"><div class="testi-av" style="background:#fef3c7;color:#92400e;">F</div><div><div class="testi-name">Fatima Al-Hassan</div><div class="testi-role">Parent, Abuja</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Begin Your Academic Journey Today</h2>
+  <p>Join over 60,000 students who complete their assignments with confidence and clarity.</p>
+  <a href="#solver" class="btn-white">Access AI Solver — Free →</a>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo-text">Scholaris Academy</div>
+      <p class="footer-desc">Empowering students across Africa and beyond with intelligent, accessible academic support — available any time, for any subject.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a href="#solver">AI Solver</a><a href="#subjects">Subjects</a>
+      <a href="#how">How It Works</a><a href="#features">Features</a>
+    </div>
+    <div class="footer-col">
+      <h4>Levels</h4>
+      <a href="#">Primary School</a><a href="#">Secondary School</a>
+      <a href="#">University</a><a href="#">JAMB &amp; WAEC Prep</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Help Centre</a><a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a><a href="#">Terms of Use</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Scholaris Academy. All rights reserved.</span>
+    <span>Designed to empower every student.</span>
+  </div>
+</footer>
+
+<script>
+let chatHistory = [];
+let uploadedImageBase64 = null;
+let uploadedMimeType = null;
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.sb-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('chatPanel').style.display = tab === 'chat' ? 'block' : 'none';
+  document.getElementById('uploadPanel').style.display = tab === 'upload' ? 'block' : 'none';
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+function fillChat(text) {
+  const inp = document.getElementById('chatInput');
+  inp.value = text; autoResize(inp); inp.focus();
+}
+
+function addMsg(role, html) {
+  const area = document.getElementById('chatMessages');
+  const d = document.createElement('div');
+  d.className = 'msg ' + role;
+  d.innerHTML = '<div class="msg-av">' + (role === 'user' ? '👤' : 'S') + '</div><div class="msg-bub">' + html + '</div>';
+  area.appendChild(d);
+  area.scrollTop = area.scrollHeight;
+}
+
+function showTyping() {
+  const area = document.getElementById('chatMessages');
+  const d = document.createElement('div');
+  d.className = 'msg ai'; d.id = 'typingMsg';
+  d.innerHTML = '<div class="msg-av">S</div><div class="msg-bub"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  area.appendChild(d); area.scrollTop = area.scrollHeight;
+}
+
+function removeTyping() { const t = document.getElementById('typingMsg'); if (t) t.remove(); }
+
+async function sendChat() {
+  const inp = document.getElementById('chatInput');
+  const subject = document.getElementById('subjectSelect').value;
+  const q = inp.value.trim(); if (!q) return;
+  inp.value = ''; inp.style.height = 'auto';
+  addMsg('user', q);
+  showTyping();
+  chatHistory.push({ role: 'user', content: q });
+
+  const system = `You are a professional academic tutor at Scholaris Academy — a highly respected educational institution. The student is currently studying: ${subject}.
+Your role:
+1. Provide clear, numbered step-by-step solutions
+2. Use proper academic language appropriate for the subject
+3. Show all working and reasoning
+4. For mathematics: show every calculation step with clear notation
+5. For essay subjects: provide structured guidance on argument and structure
+6. End with a brief summary of the key concept learned
+7. Occasionally encourage the student respectfully
+Format using HTML: use <strong> for key terms, <br> for line breaks between steps. Label steps as "Step 1:", "Step 2:" etc.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system, messages: chatHistory })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.content?.[0]?.text || 'I encountered an issue. Please try again.';
+    chatHistory.push({ role: 'assistant', content: reply });
+    addMsg('ai', reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>'));
+  } catch {
+    removeTyping();
+    addMsg('ai', '⚠️ Connection error. Please check your internet connection and try again.');
+  }
+}
+
+function dragOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('drag-over'); }
+function dragLeave() { document.getElementById('dropZone').classList.remove('drag-over'); }
+function dropFile(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processImageFile(file);
+}
+function handleFile(e) { const f = e.target.files[0]; if (f) processImageFile(f); }
+
+function processImageFile(file) {
+  uploadedMimeType = file.type;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    uploadedImageBase64 = e.target.result.split(',')[1];
+    const preview = document.getElementById('previewImg');
+    preview.src = e.target.result; preview.style.display = 'block';
+    document.getElementById('analyzeBtn').disabled = false;
+    document.getElementById('uploadResult').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function analyzeImage() {
+  if (!uploadedImageBase64) return;
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true; btn.textContent = 'Analysing…';
+  const resultDiv = document.getElementById('uploadResult');
+  const resultText = document.getElementById('uploadResultText');
+  resultDiv.style.display = 'block';
+  resultText.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+        system: `You are a professional academic tutor at Scholaris Academy. A student has uploaded a photo of their assignment. Your task: 1) Identify all questions or problems visible in the image. 2) Solve or explain each one with clear numbered steps. 3) Use proper academic language. 4) For maths, show every calculation step. Format with HTML: use <strong> for key terms and <br> for line breaks.`,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: uploadedMimeType, data: uploadedImageBase64 } },
+            { type: 'text', text: 'Please read this assignment image carefully and provide a complete, step-by-step solution for all questions you can see.' }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Unable to read the image. Please try a clearer photo.';
+    resultText.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  } catch {
+    resultText.innerHTML = '⚠️ Analysis failed. Please check your connection and try again.';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> Analyse Again';
+}
+
+const ro = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      ro.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+</script>
+</body>
+</html>
