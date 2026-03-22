@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClassAttend – 100 Level Attendance</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #0D1B2A; --card: #132337; --card2: #1C3350;
+    --amber: #F4A124; --green: #2ECC71; --red: #E74C3C; --orange: #E67E22;
+    --text: #E8EDF2; --muted: #7A92A8; --border: rgba(255,255,255,0.09);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; }
+
+  /* ── HEADER ── */
+  .hdr {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 0 18px; height: 58px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 90;
+  }
+  .hdr-left { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 36px; height: 36px; background: var(--amber); border-radius: 9px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .hdr h1 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; line-height: 1.1; }
+  .hdr p  { font-size: 10px; color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 6px var(--green); flex-shrink: 0; }
+
+  /* ── TABS ── */
+  .tabs { background: var(--card); border-bottom: 1px solid var(--border);
+    display: flex; gap: 0; overflow-x: auto; position: sticky; top: 58px; z-index: 89; }
+  .tab { padding: 14px 20px; border: none; background: transparent; color: var(--muted);
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer;
+    border-bottom: 3px solid transparent; white-space: nowrap; transition: all .18s; }
+  .tab.on { color: var(--amber); border-bottom-color: var(--amber); }
+  .tab:hover:not(.on) { color: var(--text); background: rgba(255,255,255,.03); }
+
+  /* ── SCREENS ── */
+  .screen { display: none; max-width: 960px; margin: 0 auto; padding: 20px 16px; }
+  .screen.on { display: block; }
+
+  /* ── CARDS ── */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card-sm { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+
+  /* ── BUTTONS ── */
+  .btn { border: none; border-radius: 8px; padding: 10px 18px; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
+    display: inline-flex; align-items: center; gap: 7px; transition: all .15s; }
+  .btn-amber { background: var(--amber); color: #0D1B2A; }
+  .btn-amber:hover { background: #FFBD4A; }
+  .btn-ghost { background: var(--card2); color: var(--text); }
+  .btn-ghost:hover { background: rgba(244,161,36,.15); color: var(--amber); }
+  .btn-red   { background: rgba(231,76,60,.15); color: var(--red);    border: 1px solid rgba(231,76,60,.3); }
+  .btn-green { background: rgba(46,204,113,.15);color: var(--green);  border: 1px solid rgba(46,204,113,.3); }
+  .btn-org   { background: rgba(230,126,34,.15); color: var(--orange); border: 1px solid rgba(230,126,34,.3); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn-xs { padding: 4px 9px;  font-size: 11px; }
+
+  /* ── INPUTS ── */
+  .inp { background: var(--card2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 13px; color: var(--text); font-size: 13px; width: 100%;
+    font-family: 'Inter', sans-serif; outline: none; transition: border .2s; }
+  .inp:focus { border-color: var(--amber); }
+  .inp::placeholder { color: var(--muted); }
+  select.inp option { background: var(--card2); }
+  .lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px;
+    color: var(--muted); margin-bottom: 5px; display: block; font-family: 'Syne', sans-serif; }
+
+  /* ── ATTENDANCE MARK BUTTONS ── */
+  .mk { border: 2px solid var(--card2); border-radius: 8px; padding: 7px 11px;
+    cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px;
+    background: var(--card2); color: var(--muted); transition: all .12s; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 4px; }
+  .mk:hover { opacity: .8; }
+  .mk.P { background: rgba(46,204,113,.22); border-color: var(--green);  color: var(--green); box-shadow: 0 0 8px rgba(46,204,113,.25); }
+  .mk.A { background: rgba(231,76,60,.22);  border-color: var(--red);    color: var(--red);   box-shadow: 0 0 8px rgba(231,76,60,.25); }
+  .mk.L { background: rgba(230,126,34,.22); border-color: var(--orange); color: var(--orange);box-shadow: 0 0 8px rgba(230,126,34,.25); }
+
+  /* ── TABLE ── */
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl th { font-family: 'Syne', sans-serif; font-size: 10px; text-transform: uppercase;
+    letter-spacing: .7px; color: var(--muted); padding: 10px 12px; text-align: left;
+    border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tbody tr:hover td { background: rgba(255,255,255,.02); }
+
+  /* ── AVATAR ── */
+  .av { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 12px; flex-shrink: 0; }
+
+  /* ── CHIPS / BADGES ── */
+  .chip { display: inline-flex; background: rgba(244,161,36,.12); color: var(--amber);
+    border: 1px solid rgba(244,161,36,.22); border-radius: 20px;
+    padding: 2px 9px; font-size: 11px; font-weight: 600; font-family: 'Syne', sans-serif; }
+  .badge-p { background: rgba(46,204,113,.14); color: var(--green);  border: 1px solid rgba(46,204,113,.28); border-radius: 20px; padding: 2px 9px; font-size: 11px; font-weight: 700; font-family: 'Syne', sans-serif; }
+  .badge-a { background: rgba(231,76,60,.14);  color: var(--red);    border: 1px solid rgba(231,76,60,.28);  border-radius: 20px; padding: 2px 9px; font-size: 11px; font-weight: 700; font-family: 'Syne', sans-serif; }
+  .badge-l { background: rgba(230,126,34,.14); color: var(--orange); border: 1px solid rgba(230,126,34,.28); border-radius: 20px; padding: 2px 9px; font-size: 11px; font-weight: 700; font-family: 'Syne', sans-serif; }
+
+  /* ── PROGRESS ── */
+  .pt { background: var(--card2); border-radius: 10px; height: 7px; overflow: hidden; }
+  .pf { height: 100%; border-radius: 10px; transition: width .4s; }
+
+  /* ── STAT BOX ── */
+  .stat { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .stat-v { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; line-height: 1; }
+  .stat-l { font-size: 11px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* ── MODAL ── */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); display: flex;
+    align-items: center; justify-content: center; z-index: 200; padding: 16px; backdrop-filter: blur(3px); }
+  .overlay.hide { display: none; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 26px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+  .modal h2 { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 20px; }
+
+  /* ── TOAST ── */
+  #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--amber); color: #0D1B2A; padding: 11px 22px; border-radius: 10px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; z-index: 999;
+    opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,.4); }
+  #toast.show { opacity: 1; }
+
+  /* ── MISC ── */
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+  .mt8  { margin-top: 8px; }
+  .mt14 { margin-top: 14px; }
+  .mt18 { margin-top: 18px; }
+  .empty { display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 52px 20px; color: var(--muted); gap: 10px; text-align: center; }
+  .srch { position: relative; }
+  .srch-ic { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+  .srch .inp { padding-left: 34px; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+  .snum { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  textarea.inp { resize: vertical; min-height: 120px; font-size: 13px; line-height: 1.6; }
+  .info-box { background: rgba(244,161,36,.08); border: 1px solid rgba(244,161,36,.2);
+    border-radius: 8px; padding: 12px 14px; font-size: 12px; color: var(--amber); line-height: 1.6; }
+
+  @media (max-width: 600px) {
+    .grid4 { grid-template-columns: repeat(2,1fr); }
+    .hdr h1 { font-size: 14px; }
+    .tab { padding: 12px 14px; font-size: 12px; }
+    .mk { padding: 5px 8px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="logo">📋</div>
+    <div>
+      <h1>ClassAttend Pro</h1>
+      <p>Library &amp; Information Science · 100 Level · Social Science</p>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="dot"></div>
+    <span style="font-size:11px;color:var(--muted)">Offline</span>
+  </div>
+</div>
+
+<!-- ═══════════════ TABS ═══════════════ -->
+<div class="tabs">
+  <button class="tab on" onclick="showTab('dashboard')">🏠 Dashboard</button>
+  <button class="tab"    onclick="showTab('students')">👨‍🎓 Students</button>
+  <button class="tab"    onclick="showTab('attendance')">📋 Attendance</button>
+  <button class="tab"    onclick="showTab('reports')">📊 Reports</button>
+  <button class="tab"    onclick="showTab('settings')">⚙️ Settings</button>
+</div>
+
+<!-- ═══════════════ TOAST ═══════════════ -->
+<div id="toast"></div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 1: DASHBOARD
+═════════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen on">
+  <div class="grid4 mt8" id="dash-stats"></div>
+
+  <div class="grid2 mt14">
+    <!-- 7-day trend -->
+    <div class="card">
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--amber);margin-bottom:14px">📈 7-Day Attendance Trend</div>
+      <div id="trend-bars" style="display:flex;align-items:flex-end;gap:5px;height:90px;margin-bottom:6px"></div>
+      <div style="font-size:10px;color:var(--muted);text-align:center">Present + Late per day</div>
+    </div>
+
+    <!-- Today summary -->
+    <div class="card">
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--amber);margin-bottom:14px">📋 Today's Summary</div>
+      <div id="today-summary"></div>
+    </div>
+  </div>
+
+  <!-- Recent activity -->
+  <div class="card mt14" style="padding:0;overflow:hidden">
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--amber)">Today's Marked Students</span>
+      <span id="today-date" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div id="recent-list"></div>
+  </div>
+
+  <!-- Info bar -->
+  <div class="card mt14" style="padding:13px 18px">
+    <div class="row" style="gap:18px">
+      <div><span class="lbl">Faculty</span><span class="chip">Social Science</span></div>
+      <div><span class="lbl">Course</span><span class="chip">Library &amp; Info Science</span></div>
+      <div><span class="lbl">Level</span><span class="chip">100 Level</span></div>
+      <div id="total-rec-info" style="margin-left:auto;font-size:11px;color:var(--muted)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 2: STUDENTS
+═════════════════════════════════════════ -->
+<div id="screen-students" class="screen">
+  <div class="row mt8">
+    <div class="srch" style="flex:1;min-width:160px">
+      <span class="srch-ic">🔍</span>
+      <input class="inp" id="stu-search" placeholder="Search by name or ID…" oninput="renderStudentTable()">
+    </div>
+    <button class="btn btn-amber" onclick="openAddModal()">+ Add Student</button>
+    <button class="btn btn-ghost btn-sm" onclick="openBulkModal()">📋 Bulk Import</button>
+  </div>
+
+  <div class="card mt14" style="padding:0;overflow:hidden">
+    <table class="tbl">
+      <thead><tr>
+        <th>#</th><th>Student Name</th><th>Student ID</th><th>Gender</th><th>Att. Rate</th><th></th>
+      </tr></thead>
+      <tbody id="stu-tbody"></tbody>
+    </table>
+    <div id="stu-empty" class="empty" style="display:none">
+      <div style="font-size:40px">👨‍🎓</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700">No students yet</div>
+      <div style="font-size:13px">Click <strong>+ Add Student</strong> or use <strong>Bulk Import</strong></div>
+    </div>
+  </div>
+  <div class="snum" id="stu-count"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 3: ATTENDANCE
+═════════════════════════════════════════ -->
+<div id="screen-attendance" class="screen">
+  <!-- Controls -->
+  <div class="row mt8">
+    <div>
+      <label class="lbl">Date</label>
+      <input type="date" class="inp" id="att-date" style="width:auto" onchange="renderAttTable()">
+    </div>
+    <div class="srch" style="flex:1;min-width:150px">
+      <label class="lbl">Search Student</label>
+      <span class="srch-ic" style="top:calc(50% + 9px)">🔍</span>
+      <input class="inp" id="att-search" placeholder="Name or ID…" oninput="renderAttTable()">
+    </div>
+  </div>
+
+  <!-- Day stats -->
+  <div class="grid4 mt14" id="att-stats"></div>
+
+  <!-- Student list -->
+  <div class="card mt14" style="padding:0;overflow:hidden">
+    <table class="tbl">
+      <thead><tr>
+        <th>#</th><th>Student</th><th>Mark Attendance</th>
+      </tr></thead>
+      <tbody id="att-tbody"></tbody>
+    </table>
+    <div id="att-empty" class="empty" style="display:none">
+      <div style="font-size:36px">📭</div>
+      <div>No students added yet. Go to <strong>Students</strong> tab first.</div>
+    </div>
+  </div>
+  <div class="snum" id="att-count"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 4: REPORTS
+═════════════════════════════════════════ -->
+<div id="screen-reports" class="screen">
+  <!-- Filters -->
+  <div class="row mt8">
+    <div>
+      <label class="lbl">From</label>
+      <input type="date" class="inp" id="rep-from" style="width:auto" onchange="renderReports()">
+    </div>
+    <div>
+      <label class="lbl">To</label>
+      <input type="date" class="inp" id="rep-to" style="width:auto" onchange="renderReports()">
+    </div>
+    <button class="btn btn-amber btn-sm" onclick="exportCSV()" style="margin-top:14px">⬇ Export CSV</button>
+  </div>
+
+  <!-- Summary -->
+  <div class="grid4 mt14" id="rep-stats"></div>
+
+  <!-- Toggle -->
+  <div class="row mt14" style="gap:6px">
+    <button id="rep-btn-stu" class="btn btn-amber btn-sm" onclick="setRepView('student')">👨‍🎓 By Student</button>
+    <button id="rep-btn-date" class="btn btn-ghost btn-sm" onclick="setRepView('date')">📅 By Date</button>
+  </div>
+
+  <!-- Table -->
+  <div class="card mt14" style="padding:0;overflow:hidden">
+    <table class="tbl">
+      <thead id="rep-head"></thead>
+      <tbody id="rep-tbody"></tbody>
+    </table>
+    <div id="rep-empty" class="empty" style="display:none">
+      <div>No records in this date range.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 5: SETTINGS
+═════════════════════════════════════════ -->
+<div id="screen-settings" class="screen">
+  <div class="card mt8">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+      <div style="width:44px;height:44px;background:var(--amber);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📋</div>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px">ClassAttend Pro</div>
+        <div style="font-size:12px;color:var(--muted)">100 Level · Library &amp; Information Science · Social Science</div>
+      </div>
+    </div>
+    <div class="grid4" id="set-stats"></div>
+  </div>
+
+  <!-- Lecturer info -->
+  <div class="card mt14">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--amber);margin-bottom:14px">👤 Lecturer Info</div>
+    <div class="grid2">
+      <div>
+        <label class="lbl">Lecturer Name</label>
+        <input class="inp" id="lec-name" placeholder="e.g. Dr. Adeyemi" oninput="saveLecturerInfo()">
+      </div>
+      <div>
+        <label class="lbl">Course Code</label>
+        <input class="inp" id="lec-code" placeholder="e.g. LIS 101" oninput="saveLecturerInfo()">
+      </div>
+    </div>
+    <div class="mt8">
+      <label class="lbl">Semester</label>
+      <select class="inp" id="lec-sem" onchange="saveLecturerInfo()" style="width:auto">
+        <option>First Semester</option>
+        <option>Second Semester</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Backup -->
+  <div class="card mt14">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--amber);margin-bottom:14px">💾 Backup &amp; Restore</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-amber" style="justify-content:center" onclick="exportBackup()">⬇ Export Full Backup (.json)</button>
+      <label class="btn btn-ghost" style="justify-content:center;cursor:pointer">
+        ⬆ Restore from Backup
+        <input type="file" accept=".json" style="display:none" onchange="importBackup(event)">
+      </label>
+      <div style="font-size:11px;color:var(--muted);text-align:center">Includes all students + attendance records</div>
+    </div>
+  </div>
+
+  <!-- Danger zone -->
+  <div class="card mt14" style="border-color:rgba(231,76,60,.35)">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--red);margin-bottom:12px">⚠ Danger Zone</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-red btn-sm" onclick="confirmAction('Clear ALL attendance records?', clearAllAttendance)">Clear All Attendance</button>
+      <button class="btn btn-red btn-sm" onclick="confirmAction('Delete ALL students and attendance?', clearAllData)">Delete All Data</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MODALS
+════════════════════════════════════════════ -->
+
+<!-- Add/Edit Student -->
+<div id="modal-student" class="overlay hide">
+  <div class="modal">
+    <h2 id="modal-student-title">Add New Student</h2>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label class="lbl">Full Name <span style="color:var(--red)">*</span></label>
+        <input class="inp" id="form-name" placeholder="e.g. Adaeze Okonkwo">
+      </div>
+      <div class="grid2">
+        <div>
+          <label class="lbl">Student ID (optional)</label>
+          <input class="inp" id="form-id" placeholder="Auto-generated if blank">
+        </div>
+        <div>
+          <label class="lbl">Gender</label>
+          <select class="inp" id="form-gender">
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn btn-amber" style="flex:1;justify-content:center" onclick="saveStudent()">Save Student</button>
+        <button class="btn btn-ghost" onclick="closeModal('modal-student')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Import -->
+<div id="modal-bulk" class="overlay hide">
+  <div class="modal">
+    <h2>Bulk Import Students</h2>
+    <div class="info-box" style="margin-bottom:14px">
+      📌 Enter one student name per line. Student IDs will be auto-generated.<br>
+      You can also paste a list of up to 250 names at once.
+    </div>
+    <label class="lbl">Student Names (one per line)</label>
+    <textarea class="inp" id="bulk-names" placeholder="Adaeze Okonkwo&#10;Emeka Eze&#10;Fatima Bello&#10;Chukwuemeka Nwosu&#10;..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+      <button class="btn btn-amber" style="flex:1;justify-content:center" onclick="doBulkImport()">Import Students</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-bulk')">Cancel</button>
+    </div>
+    <div id="bulk-preview" style="font-size:12px;color:var(--muted);margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- Confirm Dialog -->
+<div id="modal-confirm" class="overlay hide">
+  <div class="modal" style="max-width:340px">
+    <div style="font-size:36px;text-align:center;margin-bottom:12px">⚠️</div>
+    <p id="confirm-msg" style="font-family:'Syne',sans-serif;font-weight:700;text-align:center;margin-bottom:18px;font-size:14px"></p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-red"   style="flex:1;justify-content:center" id="confirm-yes">Yes, proceed</button>
+      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal('modal-confirm')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+let state = {
+  students:   [],
+  attendance: [],
+  lecturer:   { name: "", code: "", sem: "First Semester" }
+};
+
+const TODAY = new Date().toISOString().split("T")[0];
+let editingStudentId = null;
+let repView = "student";
+
+const AV_CLR = ["#E74C3C","#9B59B6","#3498DB","#1ABC9C","#F39C12","#2ECC71","#E67E22","#E91E63","#00BCD4","#FF5722"];
+const avColor = n => AV_CLR[(n||"A").charCodeAt(0) % AV_CLR.length];
+const initials = n => (n||"?").trim().split(/\s+/).map(w=>w[0]||"").join("").slice(0,2).toUpperCase();
+function pct(p,t){ return t===0 ? 0 : Math.round((p/t)*100); }
+function pcol(p){ return p>=75?"var(--green)":p>=50?"var(--orange)":"var(--red)"; }
+function fmtDate(iso){
+  return new Date(iso+"T00:00:00").toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+}
+function daysAgo(n){ const d=new Date(); d.setDate(d.getDate()-n); return d.toISOString().split("T")[0]; }
+function nextId(){ const n=state.students.length+1; return "STU"+String(n).padStart(3,"0"); }
+
+// ─── STORAGE ──────────────────────────────────────────────────────────────
+function save(){
+  try{ localStorage.setItem("ca_state", JSON.stringify(state)); } catch(_){}
+}
+function load(){
+  try{
+    const raw = localStorage.getItem("ca_state");
+    if(raw) state = JSON.parse(raw);
+  }catch(_){}
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = "✓ " + msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove("show"), 2200);
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────
+function showTab(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
+  document.getElementById("screen-"+id).classList.add("on");
+  const tabs = ["dashboard","students","attendance","reports","settings"];
+  document.querySelectorAll(".tab")[tabs.indexOf(id)].classList.add("on");
+  if(id==="dashboard")  renderDashboard();
+  if(id==="students")   renderStudentTable();
+  if(id==="attendance") renderAttTable();
+  if(id==="reports")    renderReports();
+  if(id==="settings")   renderSettings();
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.remove("hide"); }
+function closeModal(id) { document.getElementById(id).classList.add("hide"); }
+
+// ─── CONFIRM ──────────────────────────────────────────────────────────────
+function confirmAction(msg, fn){
+  document.getElementById("confirm-msg").textContent = msg;
+  document.getElementById("confirm-yes").onclick = ()=>{ fn(); closeModal("modal-confirm"); };
+  openModal("modal-confirm");
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  STUDENTS
+// ═══════════════════════════════════════════════════════════════════
+function openAddModal(){
+  editingStudentId = null;
+  document.getElementById("modal-student-title").textContent = "Add New Student";
+  document.getElementById("form-name").value = "";
+  document.getElementById("form-id").value = "";
+  document.getElementById("form-gender").value = "Male";
+  openModal("modal-student");
+  setTimeout(()=>document.getElementById("form-name").focus(), 100);
+}
+
+function openEditModal(id){
+  const s = state.students.find(x=>x.id===id); if(!s) return;
+  editingStudentId = id;
+  document.getElementById("modal-student-title").textContent = "Edit Student";
+  document.getElementById("form-name").value   = s.name;
+  document.getElementById("form-id").value     = s.id;
+  document.getElementById("form-gender").value = s.gender;
+  openModal("modal-student");
+  setTimeout(()=>document.getElementById("form-name").focus(), 100);
+}
+
+function saveStudent(){
+  const name   = document.getElementById("form-name").value.trim();
+  const rawId  = document.getElementById("form-id").value.trim();
+  const gender = document.getElementById("form-gender").value;
+  if(!name){ toast("Name is required"); return; }
+
+  if(editingStudentId){
+    const idx = state.students.findIndex(s=>s.id===editingStudentId);
+    state.students[idx] = { id: editingStudentId, name, gender };
+    toast("Student updated");
+  } else {
+    if(state.students.length >= 250){ toast("Maximum 250 students reached"); return; }
+    const id = rawId || nextId();
+    if(state.students.some(s=>s.id===id)){ toast("ID already exists"); return; }
+    state.students.push({ id, name, gender });
+    toast("Student added");
+  }
+  save();
+  closeModal("modal-student");
+  renderStudentTable();
+  renderDashboard();
+}
+
+function deleteStudent(id){
+  confirmAction("Delete this student and all their attendance records?", ()=>{
+    state.students   = state.students.filter(s=>s.id!==id);
+    state.attendance = state.attendance.filter(r=>r.studentId!==id);
+    save(); renderStudentTable(); renderDashboard(); toast("Student removed");
+  });
+}
+
+function renderStudentTable(){
+  const q     = (document.getElementById("stu-search")||{value:""}).value.toLowerCase();
+  const list  = state.students.filter(s=>s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q));
+  const tbody = document.getElementById("stu-tbody");
+  const empty = document.getElementById("stu-empty");
+
+  if(state.students.length === 0){ tbody.innerHTML=""; empty.style.display="flex"; }
+  else {
+    empty.style.display="none";
+    tbody.innerHTML = list.map((s,i)=>{
+      const recs = state.attendance.filter(r=>r.studentId===s.id);
+      const P    = recs.filter(r=>r.status==="P").length;
+      const L    = recs.filter(r=>r.status==="L").length;
+      const rate = pct(P+L, recs.length);
+      const hasR = recs.length > 0;
+      return `<tr>
+        <td style="color:var(--muted);font-size:12px">${state.students.indexOf(s)+1}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div class="av" style="background:${avColor(s.name)}">${initials(s.name)}</div>
+            <span style="font-weight:500">${esc(s.name)}</span>
+          </div>
+        </td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${s.id}</td>
+        <td style="font-size:12px;color:var(--muted)">${s.gender}</td>
+        <td><span style="font-weight:700;color:${hasR?pcol(rate):"var(--muted)"}">${hasR?rate+"%":"—"}</span></td>
+        <td>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-ghost btn-xs" onclick="openEditModal('${s.id}')">✏️</button>
+            <button class="btn btn-red   btn-xs" onclick="deleteStudent('${s.id}')">🗑</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join("");
+  }
+  document.getElementById("stu-count").textContent =
+    `${list.length} of ${state.students.length} students (max 250)`;
+}
+
+// ─── BULK IMPORT ──────────────────────────────────────────────────
+function openBulkModal(){
+  document.getElementById("bulk-names").value = "";
+  document.getElementById("bulk-preview").textContent = "";
+  openModal("modal-bulk");
+  setTimeout(()=>document.getElementById("bulk-names").focus(), 100);
+}
+
+document.getElementById("bulk-names").addEventListener("input", function(){
+  const lines = this.value.split("\n").map(l=>l.trim()).filter(l=>l);
+  document.getElementById("bulk-preview").textContent =
+    lines.length ? `${lines.length} name${lines.length!==1?"s":""} ready to import` : "";
+});
+
+function doBulkImport(){
+  const lines = document.getElementById("bulk-names").value
+    .split("\n").map(l=>l.trim()).filter(l=>l);
+  if(!lines.length){ toast("No names entered"); return; }
+  const avail = 250 - state.students.length;
+  const toAdd = lines.slice(0, avail);
+  let added = 0;
+  toAdd.forEach(name=>{
+    if(!state.students.some(s=>s.name.toLowerCase()===name.toLowerCase())){
+      const id = "STU"+String(state.students.length+1).padStart(3,"0");
+      state.students.push({ id, name, gender:"Male" });
+      added++;
+    }
+  });
+  save();
+  closeModal("modal-bulk");
+  renderStudentTable();
+  renderDashboard();
+  toast(`${added} student${added!==1?"s":""} imported`);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  ATTENDANCE
+// ═══════════════════════════════════════════════════════════════════
+function getStatus(sid, date){
+  return (state.attendance.find(r=>r.studentId===sid&&r.date===date)||{}).status || null;
+}
+
+function markOne(sid, status){
+  const date = document.getElementById("att-date").value || TODAY;
+  state.attendance = state.attendance.filter(r=>!(r.studentId===sid&&r.date===date));
+  if(status) state.attendance.push({ studentId:sid, date, status });
+  save();
+  renderAttTable();
+  renderDashboard();
+}
+
+function markAll(status){
+  const date = document.getElementById("att-date").value || TODAY;
+  const q    = document.getElementById("att-search").value.toLowerCase();
+  const list = state.students.filter(s=>s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q));
+  state.attendance = state.attendance.filter(r=>!(list.some(s=>s.id===r.studentId)&&r.date===date));
+  if(status) list.forEach(s=>state.attendance.push({ studentId:s.id, date, status }));
+  save();
+  renderAttTable();
+  renderDashboard();
+  if(status){
+    const lbl = status==="P"?"Present":status==="A"?"Absent":"Late";
+    toast(`${list.length} students marked ${lbl}`);
+  } else { toast("Day cleared"); }
+}
+
+function renderAttTable(){
+  const dateEl = document.getElementById("att-date");
+  if(!dateEl.value) dateEl.value = TODAY;
+  const date = dateEl.value;
+  const q    = document.getElementById("att-search").value.toLowerCase();
+  const list = state.students.filter(s=>s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q));
+
+  const P = list.filter(s=>getStatus(s.id,date)==="P").length;
+  const A = list.filter(s=>getStatus(s.id,date)==="A").length;
+  const L = list.filter(s=>getStatus(s.id,date)==="L").length;
+  const U = list.filter(s=>!getStatus(s.id,date)).length;
+
+  document.getElementById("att-stats").innerHTML = [
+    {l:"Present",c:"var(--green)",v:P},
+    {l:"Absent", c:"var(--red)",  v:A},
+    {l:"Late",   c:"var(--orange)",v:L},
+    {l:"Unmarked",c:"var(--muted)",v:U},
+  ].map(x=>`
+    <div class="stat">
+      <div class="stat-v" style="color:${x.c}">${x.v}</div>
+      <div class="stat-l">${x.l}</div>
+    </div>`).join("");
+
+  const tbody = document.getElementById("att-tbody");
+  const empty = document.getElementById("att-empty");
+
+  if(state.students.length===0){ tbody.innerHTML=""; empty.style.display="flex"; }
+  else {
+    empty.style.display="none";
+    tbody.innerHTML = list.map((s,i)=>{
+      const st = getStatus(s.id, date);
+      const outline = st ? `outline:2px solid ${st==="P"?"var(--green)":st==="A"?"var(--red)":"var(--orange)"};outline-offset:1px` : "";
+      return `<tr>
+        <td style="color:var(--muted);font-size:11px">${state.students.indexOf(s)+1}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div class="av" style="background:${avColor(s.name)};${outline}">${initials(s.name)}</div>
+            <div>
+              <div style="font-weight:500">${esc(s.name)}</div>
+              <div style="font-size:10px;color:var(--muted)">${s.id}</div>
+            </div>
+          </div>
+        </td>
+        <td style="padding:8px 10px">
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px">
+              <button onclick="markOne('${s.id}','${st==="P"?"":"P"}')"
+                style="border:2px solid ${st==="P"?"var(--green)":"var(--card2)"};
+                       border-radius:8px;padding:10px 4px;cursor:pointer;
+                       background:${st==="P"?"rgba(46,204,113,.22)":"var(--card2)"};
+                       color:${st==="P"?"var(--green)":"var(--muted)"};
+                       font-family:'Syne',sans-serif;font-weight:700;font-size:12px;
+                       width:100%;text-align:center;line-height:1.3;
+                       ${st==="P"?"box-shadow:0 0 8px rgba(46,204,113,.3);":""}">
+                ✅<br>Present
+              </button>
+              <button onclick="markOne('${s.id}','${st==="A"?"":"A"}')"
+                style="border:2px solid ${st==="A"?"var(--red)":"var(--card2)"};
+                       border-radius:8px;padding:10px 4px;cursor:pointer;
+                       background:${st==="A"?"rgba(231,76,60,.22)":"var(--card2)"};
+                       color:${st==="A"?"var(--red)":"var(--muted)"};
+                       font-family:'Syne',sans-serif;font-weight:700;font-size:12px;
+                       width:100%;text-align:center;line-height:1.3;
+                       ${st==="A"?"box-shadow:0 0 8px rgba(231,76,60,.3);":""}">
+                ❌<br>Absent
+              </button>
+              <button onclick="markOne('${s.id}','${st==="L"?"":"L"}')"
+                style="border:2px solid ${st==="L"?"var(--orange)":"var(--card2)"};
+                       border-radius:8px;padding:10px 4px;cursor:pointer;
+                       background:${st==="L"?"rgba(230,126,34,.22)":"var(--card2)"};
+                       color:${st==="L"?"var(--orange)":"var(--muted)"};
+                       font-family:'Syne',sans-serif;font-weight:700;font-size:12px;
+                       width:100%;text-align:center;line-height:1.3;
+                       ${st==="L"?"box-shadow:0 0 8px rgba(230,126,34,.3);":""}">
+                ⏰<br>Late
+              </button>
+            </div>
+            <div style="text-align:center;font-weight:800;font-size:13px;font-family:'Syne',sans-serif;
+              padding:4px 0;
+              color:${st==="P"?"var(--green)":st==="A"?"var(--red)":st==="L"?"var(--orange)":"var(--muted)"}">
+              ${st==="P"?"✅ PRESENT":st==="A"?"❌ ABSENT":st==="L"?"⏰ LATE":"— not marked"}
+            </div>
+          </div>
+        </td>
+      </tr>`;
+    }).join("");
+  }
+  document.getElementById("att-count").textContent =
+    `${list.length} students · ${fmtDate(date)}`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  REPORTS
+// ═══════════════════════════════════════════════════════════════════
+function setRepView(v){
+  repView = v;
+  document.getElementById("rep-btn-stu").className  = "btn btn-sm "+(v==="student"?"btn-amber":"btn-ghost");
+  document.getElementById("rep-btn-date").className = "btn btn-sm "+(v==="date"   ?"btn-amber":"btn-ghost");
+  renderReports();
+}
+
+function renderReports(){
+  const fromEl = document.getElementById("rep-from");
+  const toEl   = document.getElementById("rep-to");
+  if(!fromEl.value) fromEl.value = daysAgo(29);
+  if(!toEl.value)   toEl.value   = TODAY;
+  const from = fromEl.value, to = toEl.value;
+  const inRange = d => d>=from && d<=to;
+
+  const stuStats = state.students.map(s=>{
+    const recs = state.attendance.filter(r=>r.studentId===s.id&&inRange(r.date));
+    const P=recs.filter(r=>r.status==="P").length;
+    const A=recs.filter(r=>r.status==="A").length;
+    const L=recs.filter(r=>r.status==="L").length;
+    return{...s, P, A, L, total:P+A+L, rate:pct(P+L,P+A+L)};
+  }).sort((a,b)=>b.rate-a.rate);
+
+  const overall = stuStats.length
+    ? Math.round(stuStats.reduce((s,r)=>s+r.rate,0)/stuStats.length) : 0;
+  const above75 = stuStats.filter(s=>s.rate>=75&&s.total>0).length;
+  const below75 = stuStats.filter(s=>s.rate<75&&s.total>0).length;
+  const totalRecs = state.attendance.filter(r=>inRange(r.date)).length;
+
+  document.getElementById("rep-stats").innerHTML = [
+    {l:"Overall Rate", v:overall+"%", c:"var(--amber)"},
+    {l:"≥75% Attend",  v:above75,     c:"var(--green)"},
+    {l:"<75% Attend",  v:below75,     c:"var(--red)"},
+    {l:"Total Records",v:totalRecs,   c:"var(--muted)"},
+  ].map(x=>`
+    <div class="stat">
+      <div class="stat-v" style="color:${x.c}">${x.v}</div>
+      <div class="stat-l">${x.l}</div>
+    </div>`).join("");
+
+  const thead = document.getElementById("rep-head");
+  const tbody = document.getElementById("rep-tbody");
+  const empty = document.getElementById("rep-empty");
+
+  if(repView==="student"){
+    thead.innerHTML = `<tr><th>#</th><th>Student</th><th>ID</th><th style="text-align:center">P</th><th style="text-align:center">A</th><th style="text-align:center">L</th><th>Rate</th></tr>`;
+    if(!stuStats.length){ tbody.innerHTML=""; empty.style.display="flex"; return; }
+    empty.style.display="none";
+    tbody.innerHTML = stuStats.map((s,i)=>{
+      const bar = s.total>0
+        ? `<div style="display:flex;align-items:center;gap:8px">
+            <div class="pt" style="flex:1"><div class="pf" style="width:${s.rate}%;background:${pcol(s.rate)}"></div></div>
+            <span style="font-size:11px;color:${pcol(s.rate)};width:34px">${s.rate}%</span></div>`
+        : `<span style="color:var(--muted)">—</span>`;
+      return `<tr>
+        <td style="color:var(--muted);font-size:11px">${i+1}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="av" style="background:${avColor(s.name)};width:28px;height:28px;font-size:11px">${initials(s.name)}</div>
+            <span style="font-size:13px;font-weight:500">${esc(s.name)}</span>
+          </div>
+        </td>
+        <td style="font-size:11px;color:var(--muted)">${s.id}</td>
+        <td style="text-align:center;color:var(--green);font-weight:700">${s.P}</td>
+        <td style="text-align:center;color:var(--red);font-weight:700">${s.A}</td>
+        <td style="text-align:center;color:var(--orange);font-weight:700">${s.L}</td>
+        <td style="min-width:120px">${bar}</td>
+      </tr>`;
+    }).join("");
+  } else {
+    const dates = [...new Set(
+      state.attendance.filter(r=>inRange(r.date)).map(r=>r.date)
+    )].sort().reverse();
+
+    thead.innerHTML = `<tr><th>Date</th><th style="text-align:center">Present</th><th style="text-align:center">Absent</th><th style="text-align:center">Late</th><th>Rate</th></tr>`;
+    if(!dates.length){ tbody.innerHTML=""; empty.style.display="flex"; return; }
+    empty.style.display="none";
+    tbody.innerHTML = dates.map(d=>{
+      const recs=state.attendance.filter(r=>r.date===d);
+      const P=recs.filter(r=>r.status==="P").length;
+      const A=recs.filter(r=>r.status==="A").length;
+      const L=recs.filter(r=>r.status==="L").length;
+      const rate=pct(P+L,P+A+L);
+      const isT = d===TODAY;
+      return `<tr>
+        <td style="font-size:12px">${fmtDate(d)}${isT?` <span class="chip" style="font-size:9px">Today</span>`:""}</td>
+        <td style="text-align:center;color:var(--green);font-weight:700">${P}</td>
+        <td style="text-align:center;color:var(--red);font-weight:700">${A}</td>
+        <td style="text-align:center;color:var(--orange);font-weight:700">${L}</td>
+        <td style="min-width:120px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="pt" style="flex:1"><div class="pf" style="width:${rate}%;background:${pcol(rate)}"></div></div>
+            <span style="font-size:11px;color:${pcol(rate)};width:34px">${P+A+L>0?rate+"%":"—"}</span>
+          </div>
+        </td>
+      </tr>`;
+    }).join("");
+  }
+}
+
+function exportCSV(){
+  const from = document.getElementById("rep-from").value || daysAgo(29);
+  const to   = document.getElementById("rep-to").value   || TODAY;
+  const inRange = d => d>=from && d<=to;
+
+  const rows = [["#","Student ID","Name","Gender","Present","Absent","Late","Total","Rate%"]];
+  state.students.forEach((s,i)=>{
+    const recs = state.attendance.filter(r=>r.studentId===s.id&&inRange(r.date));
+    const P=recs.filter(r=>r.status==="P").length;
+    const A=recs.filter(r=>r.status==="A").length;
+    const L=recs.filter(r=>r.status==="L").length;
+    rows.push([i+1, s.id, s.name, s.gender, P, A, L, P+A+L, pct(P+L,P+A+L)]);
+  });
+  const csv = rows.map(r=>r.map(c=>`"${c}"`).join(",")).join("\n");
+  const blob = new Blob([csv],{type:"text/csv"});
+  const a = document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download = `attendance_100level_${from}_to_${to}.csv`; a.click();
+  toast("CSV exported");
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════════════════════════
+function renderDashboard(){
+  const todayRecs = state.attendance.filter(r=>r.date===TODAY);
+  const P = todayRecs.filter(r=>r.status==="P").length;
+  const A = todayRecs.filter(r=>r.status==="A").length;
+  const L = todayRecs.filter(r=>r.status==="L").length;
+  const U = state.students.length - (P+A+L);
+
+  document.getElementById("today-date").textContent = fmtDate(TODAY);
+  document.getElementById("total-rec-info").textContent =
+    `${state.attendance.length} records stored locally`;
+
+  document.getElementById("dash-stats").innerHTML = [
+    {l:"Total Students",v:state.students.length, c:"#3498DB",  i:"👨‍🎓"},
+    {l:"Present Today", v:P,                     c:"var(--green)",  i:"✅"},
+    {l:"Absent Today",  v:A,                     c:"var(--red)",    i:"❌"},
+    {l:"Late / Unmarked",v:`${L} / ${U}`,        c:"var(--orange)", i:"⏰"},
+  ].map(x=>`
+    <div class="stat" style="display:flex;align-items:center;gap:12px">
+      <div style="font-size:24px;flex-shrink:0">${x.i}</div>
+      <div>
+        <div class="stat-v" style="color:${x.c}">${x.v}</div>
+        <div class="stat-l">${x.l}</div>
+      </div>
+    </div>`).join("");
+
+  // 7-day trend
+  const days7 = Array.from({length:7},(_,i)=>daysAgo(6-i));
+  const trend  = days7.map(d=>{
+    const recs = state.attendance.filter(r=>r.date===d);
+    const v = recs.filter(r=>r.status==="P").length + recs.filter(r=>r.status==="L").length;
+    return{d, v, t:recs.length};
+  });
+  const maxT = Math.max(...trend.map(t=>t.t), 1);
+
+  document.getElementById("trend-bars").innerHTML = trend.map(({d,v,t})=>{
+    const h = t>0 ? Math.max((v/maxT)*78,4) : 4;
+    const day = new Date(d+"T00:00:00").toLocaleDateString("en-US",{weekday:"short"});
+    const isT = d===TODAY;
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+      <div title="${v}/${t} on ${fmtDate(d)}" style="width:100%;height:${h}px;
+        background:${isT?"var(--amber)":"var(--card2)"};border-radius:4px 4px 2px 2px;min-height:4px"></div>
+      <span style="font-size:9px;color:${isT?"var(--amber)":"var(--muted)"};font-weight:${isT?"700":"400"}">${day}</span>
+    </div>`;
+  }).join("");
+
+  // today summary progress
+  const marked = P+A+L;
+  const total  = state.students.length || 1;
+  const mp = pct(marked,total);
+  document.getElementById("today-summary").innerHTML = `
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+        <span>Marking progress</span>
+        <span style="font-weight:600;color:var(--amber)">${marked}/${state.students.length}</span>
+      </div>
+      <div class="pt"><div class="pf" style="width:${mp}%;background:var(--amber)"></div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${[{l:"Present",c:"var(--green)",v:P},{l:"Absent",c:"var(--red)",v:A},{l:"Late",c:"var(--orange)",v:L}].map(x=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+        <span style="color:var(--muted)">${x.l}</span>
+        <span style="font-weight:700;color:${x.c}">${x.v} <span style="color:var(--muted);font-size:11px;font-weight:400">(${pct(x.v,state.students.length||1)}%)</span></span>
+      </div>`).join("")}
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center">
+      ${U>0?`⚠ ${U} student${U!==1?"s":""} not yet marked`:"✅ All students marked!"}
+    </div>`;
+
+  // recent list
+  const recent = state.attendance.filter(r=>r.date===TODAY).slice(0,8)
+    .map(r=>({...r,student:state.students.find(s=>s.id===r.studentId)})).filter(r=>r.student);
+
+  if(!recent.length){
+    document.getElementById("recent-list").innerHTML =
+      `<div class="empty" style="padding:28px"><div style="font-size:28px">📭</div><div>No attendance marked today yet</div></div>`;
+  } else {
+    document.getElementById("recent-list").innerHTML = `
+      <table class="tbl"><tbody>
+        ${recent.map(r=>`<tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:9px">
+              <div class="av" style="background:${avColor(r.student.name)}">${initials(r.student.name)}</div>
+              <div>
+                <div style="font-weight:500;font-size:13px">${esc(r.student.name)}</div>
+                <div style="font-size:10px;color:var(--muted)">${r.student.id}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            ${r.status==="P"?'<span class="badge-p">Present</span>':r.status==="A"?'<span class="badge-a">Absent</span>':'<span class="badge-l">Late</span>'}
+          </td>
+        </tr>`).join("")}
+      </tbody></table>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════════════════════════════
+function saveLecturerInfo(){
+  state.lecturer.name = document.getElementById("lec-name").value;
+  state.lecturer.code = document.getElementById("lec-code").value;
+  state.lecturer.sem  = document.getElementById("lec-sem").value;
+  save();
+}
+
+function renderSettings(){
+  const days = [...new Set(state.attendance.map(r=>r.date))].length;
+  document.getElementById("set-stats").innerHTML = [
+    {l:"Students",    v:state.students.length,   c:"#3498DB"},
+    {l:"Att. Records",v:state.attendance.length, c:"#2ECC71"},
+    {l:"Days Logged", v:days,                    c:"#E67E22"},
+    {l:"Capacity",    v:"250",                   c:"var(--muted)"},
+  ].map(x=>`
+    <div style="background:var(--bg);border-radius:8px;padding:10px 14px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:${x.c}">${x.v}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${x.l}</div>
+    </div>`).join("");
+
+  document.getElementById("lec-name").value = state.lecturer.name || "";
+  document.getElementById("lec-code").value = state.lecturer.code || "";
+  document.getElementById("lec-sem").value  = state.lecturer.sem  || "First Semester";
+}
+
+function exportBackup(){
+  const data = JSON.stringify({ ...state, exportedAt: new Date().toISOString() }, null, 2);
+  const blob = new Blob([data],{type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `classattend_100level_${TODAY}.json`; a.click();
+  toast("Backup exported");
+}
+
+function importBackup(e){
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try{
+      const d = JSON.parse(ev.target.result);
+      if(d.students)   state.students   = d.students;
+      if(d.attendance) state.attendance = d.attendance;
+      if(d.lecturer)   state.lecturer   = d.lecturer;
+      save(); renderDashboard(); renderSettings();
+      toast("Backup restored ✓");
+    } catch { toast("Invalid backup file"); }
+  };
+  r.readAsText(f); e.target.value="";
+}
+
+function clearAllAttendance(){ state.attendance=[]; save(); renderDashboard(); renderSettings(); toast("Attendance cleared"); }
+function clearAllData(){ state.students=[]; state.attendance=[]; save(); renderDashboard(); renderStudentTable(); renderSettings(); toast("All data cleared"); }
+
+// ─── UTILITY ──────────────────────────────────────────────────────
+function esc(str){ return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+// ─── INIT ─────────────────────────────────────────────────────────
+load();
+document.getElementById("att-date").value = TODAY;
+document.getElementById("rep-from").value = daysAgo(29);
+document.getElementById("rep-to").value   = TODAY;
+renderDashboard();
+</script>
+</body>
+</html>
